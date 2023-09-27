@@ -19,6 +19,8 @@ async fn actix_web(
         anyhow!("failed to load database URI")
     })?;
 
+    std::env::set_var("MONGO_URI", &db_uri);
+
     let db = EntryRepo::init(db_uri).await.map_err(|e| {
         log::error!("\n{e:?}");
         anyhow!("failed to initialize database: {}", e)

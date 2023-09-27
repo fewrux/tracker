@@ -71,6 +71,7 @@ mod test {
     }
 
     #[tokio::test]
+
     async fn should_create_a_new_entry() {
         dotenv().ok();
 
