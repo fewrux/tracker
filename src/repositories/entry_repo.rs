@@ -58,11 +58,11 @@ impl EntryRepo {
 #[cfg(test)]
 mod test {
     use super::*;
-    use dotenv::dotenv;
+    use dotenvy;
 
     #[tokio::test]
     async fn should_connect_to_the_database() {
-        dotenv().ok();
+        dotenvy::from_filename("Secrets.toml").unwrap();
 
         let db_uri = std::env::var("MONGO_URI").unwrap();
         let db = EntryRepo::init(db_uri).await.unwrap();
@@ -71,9 +71,8 @@ mod test {
     }
 
     #[tokio::test]
-
     async fn should_create_a_new_entry() {
-        dotenv().ok();
+        dotenvy::from_filename("Secrets.toml").unwrap();
 
         let db_uri = std::env::var("MONGO_URI").unwrap();
         let db = EntryRepo::init(db_uri).await.unwrap();
@@ -90,7 +89,7 @@ mod test {
 
     #[tokio::test]
     async fn should_get_all_entries() {
-        dotenv().ok();
+        dotenvy::from_filename("Secrets.toml").unwrap();
 
         let db_uri = std::env::var("MONGO_URI").unwrap();
         let db = EntryRepo::init(db_uri).await.unwrap();
