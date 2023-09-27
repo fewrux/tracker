@@ -169,6 +169,8 @@ To configure the Tracker script on a Linux system to run at startup, you can use
 
 2. Save the file and restart your computer.
 
+**Note:** To use the Cloud configuration, a stable internet connection is a prerequisite. If you need to monitor system uptime offline, please refer to the [Local](#local) section for the appropriate setup.
+
 ## Local
 
 ### Prerequisites
