@@ -1,24 +1,24 @@
 use crate::models::entry_model::Entry;
+use anyhow::{anyhow, Result};
 use futures::TryStreamExt;
 
-use mongodb::{
-    bson::doc, bson::extjson::de::Error, options::FindOptions, results::InsertOneResult, Client,
-    Collection,
-};
+use mongodb::{bson::doc, options::FindOptions, results::InsertOneResult, Client, Collection};
 
 pub struct EntryRepo {
     col: Collection<Entry>,
 }
 
 impl EntryRepo {
-    pub async fn init(uri: String) -> Self {
-        let client = Client::with_uri_str(uri).await.unwrap();
+    pub async fn init(uri: String) -> Result<Self, anyhow::Error> {
+        let client = Client::with_uri_str(uri)
+            .await
+            .map_err(|e| anyhow!("failed to connect to database: {}", e))?;
         let db = client.database("tracker_mongo");
         let col = db.collection("Entry");
-        EntryRepo { col }
+        Ok(EntryRepo { col })
     }
 
-    pub async fn create_entry(&self, new_entry: Entry) -> Result<InsertOneResult, Error> {
+    pub async fn create_entry(&self, new_entry: Entry) -> Result<InsertOneResult, anyhow::Error> {
         let new_doc = Entry {
             id: None,
             timestamp: new_entry.timestamp,
@@ -28,12 +28,11 @@ impl EntryRepo {
             .col
             .insert_one(new_doc, None)
             .await
-            .ok()
-            .expect("Error adding new entry");
+            .map_err(|e| anyhow!("error adding new entry: {}", e))?;
         Ok(entry)
     }
 
-    pub async fn get_entries(&self) -> Result<Vec<Entry>, Error> {
+    pub async fn get_entries(&self) -> Result<Vec<Entry>, anyhow::Error> {
         let find_options = FindOptions::builder()
             .sort(doc! { "timestamp": -1 })
             .build();
@@ -42,16 +41,14 @@ impl EntryRepo {
             .col
             .find(None, find_options)
             .await
-            .ok()
-            .expect("Error getting list of entries");
+            .map_err(|e| anyhow!("error getting list of entries: {}", e))?;
 
         let mut entries: Vec<Entry> = Vec::new();
 
         while let Some(entry) = cursors
             .try_next()
             .await
-            .ok()
-            .expect("Error mapping through cursor")
+            .map_err(|e| anyhow!("error mapping through cursor: {}", e))?
         {
             entries.push(entry)
         }
