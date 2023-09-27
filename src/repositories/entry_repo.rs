@@ -19,10 +19,10 @@ impl EntryRepo {
         Ok(EntryRepo { col })
     }
 
-    pub async fn create_entry(&self, new_entry: Entry) -> Result<InsertOneResult, anyhow::Error> {
+    pub async fn create_entry(&self, timestamp: String) -> Result<InsertOneResult, anyhow::Error> {
         let new_doc = Entry {
             id: None,
-            timestamp: new_entry.timestamp,
+            timestamp,
         };
 
         let entry = self.col.insert_one(new_doc, None).await.map_err(|e| {
@@ -52,5 +52,50 @@ impl EntryRepo {
         }
 
         Ok(entries)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use dotenv::dotenv;
+
+    #[tokio::test]
+    async fn should_connect_to_the_database() {
+        dotenv().ok();
+
+        let db_uri = std::env::var("MONGO_URI").unwrap();
+        let db = EntryRepo::init(db_uri).await.unwrap();
+
+        assert_eq!(db.col.name(), "Entry");
+    }
+
+    #[tokio::test]
+    async fn should_create_a_new_entry() {
+        dotenv().ok();
+
+        let db_uri = std::env::var("MONGO_URI").unwrap();
+        let db = EntryRepo::init(db_uri).await.unwrap();
+
+        let timestamp = "2021-01-01T00:00:00.000Z".to_string();
+        db.create_entry(timestamp.clone()).await.unwrap();
+
+        let entries = db.get_entries().await.unwrap();
+
+        let last_entry = entries.last().unwrap();
+
+        assert_eq!(last_entry.timestamp == timestamp, true);
+    }
+
+    #[tokio::test]
+    async fn should_get_all_entries() {
+        dotenv().ok();
+
+        let db_uri = std::env::var("MONGO_URI").unwrap();
+        let db = EntryRepo::init(db_uri).await.unwrap();
+
+        let entries = db.get_entries().await.unwrap();
+
+        assert_eq!(entries.len() > 0, true);
     }
 }
