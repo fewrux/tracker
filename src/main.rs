@@ -3,7 +3,7 @@ mod models;
 mod repositories;
 
 use actix_web::web::{Data, ServiceConfig};
-use anyhow::anyhow;
+use anyhow::{anyhow, Context};
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_secrets::SecretStore;
 
@@ -14,14 +14,17 @@ use repositories::entry_repo::EntryRepo;
 async fn actix_web(
     #[shuttle_secrets::Secrets] secret_store: SecretStore,
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    let db_uri = match secret_store.get("MONGO_URI") {
-        Some(secret) => secret,
-        None => return Err(anyhow!("failed to load database URI").into()),
-    };
+    env_logger::init();
 
-    let db = EntryRepo::init(db_uri)
-        .await
-        .map_err(|e| anyhow!("failed to initialize database: {}", e))?;
+    let db_uri = secret_store.get("MONGO_URI").with_context(|| {
+        log::error!("\nfailed to load database URI");
+        anyhow!("failed to load database URI")
+    })?;
+
+    let db = EntryRepo::init(db_uri).await.map_err(|e| {
+        log::error!("\n{e:?}");
+        anyhow!("failed to initialize database: {}", e)
+    })?;
     let db_data = Data::new(db);
 
     let config = move |cfg: &mut ServiceConfig| {
