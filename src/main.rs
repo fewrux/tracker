@@ -14,8 +14,6 @@ use repositories::entry_repo::EntryRepo;
 async fn actix_web(
     #[shuttle_secrets::Secrets] secret_store: SecretStore,
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    env_logger::init();
-
     let db_uri = secret_store.get("MONGO_URI").with_context(|| {
         log::error!("\nfailed to load database URI");
         anyhow!("failed to load database URI")
