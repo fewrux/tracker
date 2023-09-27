@@ -7,7 +7,7 @@ pub async fn add_entry(db: Data<EntryRepo>) -> HttpResponse {
     let now: DateTime<Utc> = Utc::now();
     let timestamp = now.to_rfc2822();
 
-    println!("{}", &timestamp);
+    log::info!("timestamp: {}", &timestamp);
 
     let data = Entry {
         id: None,
