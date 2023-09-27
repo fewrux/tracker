@@ -50,6 +50,7 @@ To ensure that the Tracker script runs on Windows startup, you can use a combina
    timeout /t 60
    goto loop
    ```
+   Replace `<API_URL>` with your local or cloud URL.
    This batch file contains a loop that makes a curl request to your desired URL and waits for 60 seconds between each request.
 
 **Step 2: Create the VBScript (`launch_tracker.vbs`)**
@@ -97,10 +98,11 @@ To configure the Tracker script on a Linux system to run at startup, you can use
    ```bash
    #!/bin/bash
    while true; do
-     curl https://tracker.shuttleapp.rs/entries/add
+     curl <API_URL>
      sleep 60
    done
    ```
+   Replace `<API_URL>` with your local or cloud URL.
    This shell script contains a loop that makes a curl request to your desired URL and waits for 60 seconds between each request.
 
 **Step 2: Create the systemd Service (`launch_tracker.service`)**
@@ -116,7 +118,7 @@ To configure the Tracker script on a Linux system to run at startup, you can use
    Type=simple
    RemainAfterExit=yes
    Restart=always
-   ExecStart=/bin/bash /home/ec2-user/tracker.sh
+   ExecStart=/bin/bash /path/to/tracker.sh
 
    [Install]
    WantedBy=multi-user.target
@@ -144,13 +146,38 @@ To configure the Tracker script on a Linux system to run at startup, you can use
    ```
 3. Customize the script and adjust the startup behavior as needed.
 
+## Cloud
+
+1. Open your Tracker script and replace `<API_URL>` with the correct endpoint.
+  - Windows - `tracker.bat`:
+     ```batch
+     @echo off
+     :loop
+     curl https://example.com/api/endpoint
+     timeout /t 60
+     goto loop
+     ```
+   
+  - Linux - `tracker.sh`:
+    ```bash
+    #!binbash
+    while true; do
+      curl https://tracker.shuttleapp.rs/entries/add
+      sleep 60
+    done
+    ```
+
+2. Save the file and restart your computer.
+
+## Local
+
 ### Prerequisites
 
-Before you begin, ensure you have the following prerequisites installed:
+Before you start using Tracker locally, make sure you have the following prerequisites installed:
 
-- Rust programming language
-- Cargo package manager
-- MongoDB (local, docker or cloud)
+- [Rust programming language](https://www.rust-lang.org/)
+- [Cargo package manager](https://doc.rust-lang.org/cargo/)
+- [MongoDB](https://www.mongodb.com/) (local, Docker, or cloud)
 
 ### Installation
 
