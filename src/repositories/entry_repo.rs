@@ -60,7 +60,7 @@ mod test {
     use super::*;
     use dotenvy;
 
-    #[tokio::test]
+    #[actix_web::test]
     async fn should_connect_to_the_database() {
         dotenvy::from_filename("Secrets.toml").unwrap();
 
@@ -70,7 +70,7 @@ mod test {
         assert_eq!(db.col.name(), "Entry");
     }
 
-    #[tokio::test]
+    #[actix_web::test]
     async fn should_create_a_new_entry() {
         dotenvy::from_filename("Secrets.toml").unwrap();
 
@@ -87,7 +87,7 @@ mod test {
         assert_eq!(last_entry.timestamp == timestamp, true);
     }
 
-    #[tokio::test]
+    #[actix_web::test]
     async fn should_get_all_entries() {
         dotenvy::from_filename("Secrets.toml").unwrap();
 
