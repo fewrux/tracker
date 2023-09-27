@@ -1,4 +1,4 @@
-use crate::{models::entry_model::Entry, repositories::entry_repo::EntryRepo};
+use crate::repositories::entry_repo::EntryRepo;
 use actix_web::{get, web::Data, HttpResponse};
 use chrono::{DateTime, Utc};
 
@@ -7,12 +7,7 @@ pub async fn add_entry(db: Data<EntryRepo>) -> HttpResponse {
     let now: DateTime<Utc> = Utc::now();
     let timestamp = now.to_rfc2822();
 
-    let data = Entry {
-        id: None,
-        timestamp,
-    };
-
-    let entry_detail = db.create_entry(data).await;
+    let entry_detail = db.create_entry(timestamp).await;
 
     match entry_detail {
         Ok(entry) => {
