@@ -17,8 +17,14 @@ pub async fn add_entry(db: Data<EntryRepo>) -> HttpResponse {
     let entry_detail = db.create_entry(data).await;
 
     match entry_detail {
-        Ok(entry) => HttpResponse::Ok().json(entry),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+        Ok(entry) => {
+            log::info!("entry added: {:?}", &entry);
+            HttpResponse::Ok().json(entry)
+        }
+        Err(err) => {
+            log::error!("\n{err:?}");
+            HttpResponse::InternalServerError().body(err.to_string())
+        }
     }
 }
 
@@ -26,7 +32,13 @@ pub async fn add_entry(db: Data<EntryRepo>) -> HttpResponse {
 pub async fn get_entries(db: Data<EntryRepo>) -> HttpResponse {
     let entries = db.get_entries().await;
     match entries {
-        Ok(entries) => HttpResponse::Ok().json(entries),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+        Ok(entries) => {
+            log::info!("retrieved list of entries");
+            HttpResponse::Ok().json(entries)
+        }
+        Err(err) => {
+            log::error!("\n{err:?}");
+            HttpResponse::InternalServerError().body(err.to_string())
+        }
     }
 }
