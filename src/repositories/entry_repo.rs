@@ -10,9 +10,10 @@ pub struct EntryRepo {
 
 impl EntryRepo {
     pub async fn init(uri: String) -> Result<Self, anyhow::Error> {
-        let client = Client::with_uri_str(uri)
-            .await
-            .map_err(|e| anyhow!("failed to connect to database: {}", e))?;
+        let client = Client::with_uri_str(uri).await.map_err(|e| {
+            log::error!("\n{e:?}");
+            anyhow!("failed to connect to database: {}", e)
+        })?;
         let db = client.database("tracker_mongo");
         let col = db.collection("Entry");
         Ok(EntryRepo { col })
@@ -24,11 +25,10 @@ impl EntryRepo {
             timestamp: new_entry.timestamp,
         };
 
-        let entry = self
-            .col
-            .insert_one(new_doc, None)
-            .await
-            .map_err(|e| anyhow!("error adding new entry: {}", e))?;
+        let entry = self.col.insert_one(new_doc, None).await.map_err(|e| {
+            log::error!("\n{e:?}");
+            anyhow!("error adding new entry: {}", e)
+        })?;
         Ok(entry)
     }
 
@@ -37,19 +37,17 @@ impl EntryRepo {
             .sort(doc! { "timestamp": -1 })
             .build();
 
-        let mut cursors = self
-            .col
-            .find(None, find_options)
-            .await
-            .map_err(|e| anyhow!("error getting list of entries: {}", e))?;
+        let mut cursors = self.col.find(None, find_options).await.map_err(|e| {
+            log::error!("\n{e:?}");
+            anyhow!("error getting list of entries: {}", e)
+        })?;
 
         let mut entries: Vec<Entry> = Vec::new();
 
-        while let Some(entry) = cursors
-            .try_next()
-            .await
-            .map_err(|e| anyhow!("error mapping through cursor: {}", e))?
-        {
+        while let Some(entry) = cursors.try_next().await.map_err(|e| {
+            log::error!("\n{e:?}");
+            anyhow!("error mapping through cursor: {}", e)
+        })? {
             entries.push(entry)
         }
 
