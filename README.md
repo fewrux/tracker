@@ -18,7 +18,7 @@ Tracker is a tool designed to monitor device usage by logging time entries while
     - [Installation](#installation)
     - [Database Connection](#database-connection)
     - [Running the Application](#running-the-application)
-    - [Usage](#usage)
+    - [Consulting the Logs](#consulting-the-logs)
 - [Testing](#testing)
 - [License](#license)
 
@@ -224,7 +224,7 @@ cargo shuttle run
 ```
 The Tracker API should be available at http://localhost:8000.
 
-#### Usage
+#### Consulting the Logs
 
 To access the application logs and monitor system uptime, follow these steps:
 
