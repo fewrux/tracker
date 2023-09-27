@@ -194,10 +194,6 @@ Before you start using Tracker locally, make sure you have the following prerequ
   cargo build
   ```
 
-## Usage
-
-To use the Tracker API, follow the steps below.
-
 ### Configuration
 
 The application requires a MongoDB URI for database connection. You can set the URI in a `Secrets.toml` file. Example:
