@@ -9,13 +9,16 @@ Tracker is a tool designed to monitor device usage by logging time entries while
 - [Getting Started](#getting-started)
   - [Windows](#windows)
   - [Linux](#linux)
-- [Usage](#usage)
+- [Environment Configuration](#environment-configuration)
   - [Cloud](#cloud)
+    - [Configuration](#configuration)
+    - [Checking the Logs](#checking-the-logs)
   - [Local](#local)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-    - [Configuration](#configuration)
+    - [Database Connection](#database-connection)
     - [Running the Application](#running-the-application)
+    - [Usage](#usage)
 - [Testing](#testing)
 - [License](#license)
 
@@ -146,7 +149,13 @@ To configure the Tracker script on a Linux system to run at startup, you can use
    ```
 3. Customize the script and adjust the startup behavior as needed.
 
-## Cloud
+## Environment Configuration
+
+### Cloud
+
+**Note:** To use the Cloud configuration, a stable internet connection is a prerequisite. If you need to monitor system uptime offline, please refer to the [Local](#local) section for the appropriate setup.
+
+#### Configuration
 
 1. Open your Tracker script and replace `<API_URL>` with the correct endpoint.
   - Windows - `tracker.bat`:
@@ -169,11 +178,13 @@ To configure the Tracker script on a Linux system to run at startup, you can use
 
 2. Save the file and restart your computer.
 
-**Note:** To use the Cloud configuration, a stable internet connection is a prerequisite. If you need to monitor system uptime offline, please refer to the [Local](#local) section for the appropriate setup.
+#### Checking the Logs
 
-## Local
+To access the application logs and monitor system uptime, you can easily do so by accessing the `<API_URL>` in your internet browser. This will provide you with real-time access to the system's usage logs.
 
-### Prerequisites
+### Local
+
+#### Prerequisites
 
 Before you start using Tracker locally, make sure you have the following prerequisites installed:
 
@@ -181,7 +192,7 @@ Before you start using Tracker locally, make sure you have the following prerequ
 - [Cargo package manager](https://doc.rust-lang.org/cargo/)
 - [MongoDB](https://www.mongodb.com/) (local, Docker, or cloud)
 
-### Installation
+#### Installation
 
 1. Clone the repository:
   ```bash
@@ -194,20 +205,31 @@ Before you start using Tracker locally, make sure you have the following prerequ
   cargo build
   ```
 
-### Configuration
+#### Database Connection
 
 The application requires a MongoDB URI for database connection. You can set the URI in a `Secrets.toml` file. Example:
 ```toml
 MONGO_URI = "mongodb://localhost:27017/tracker"
 ```
 
-### Running the Application
+#### Running the Application
 
 To start the application, run the following command:
 ```bash
 cargo shuttle run
 ```
 The Tracker API should be available at http://localhost:8000.
+
+#### Usage
+
+To access the application logs and monitor system uptime, follow these steps:
+
+1. Open a terminal window.
+2. Navigate to the project directory.
+3. Run the following command to view the logs:
+   ```bash
+   cargo shuttle logs
+   ```
 
 ## Testing
 
