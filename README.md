@@ -199,15 +199,15 @@ Before you start using Tracker locally, make sure you have the following prerequ
 #### Installation
 
 1. Clone the repository:
-  ```bash
-  git clone https://github.com/fewrux/tracker.git
-  cd tracker
-  ```
+   ```bash
+   git clone https://github.com/fewrux/tracker.git
+   cd tracker
+   ```
 
 2. Build the project:
-  ```bash
-  cargo build
-  ```
+   ```bash
+   cargo build
+   ```
 
 #### Database Connection
 
