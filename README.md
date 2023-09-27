@@ -88,6 +88,8 @@ To ensure that the Tracker script runs on Windows startup, you can use a combina
 
 5. That's it! Now you can customize the script and adjust the startup behavior as needed.
 
+##
+
 ### Linux
 
 To configure the Tracker script on a Linux system to run at startup, you can use a combination of a shell script (`tracker.sh`) and a systemd service (`launch_tracker.service`). Follow these steps:
@@ -181,6 +183,8 @@ To configure the Tracker script on a Linux system to run at startup, you can use
 #### Checking the Logs
 
 To access the application logs and monitor system uptime, you can easily do so by accessing the `<API_URL>` in your internet browser. This will provide you with real-time access to the system's usage logs.
+
+##
 
 ### Local
 
