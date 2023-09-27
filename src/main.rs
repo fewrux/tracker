@@ -19,7 +19,9 @@ async fn actix_web(
         None => return Err(anyhow!("failed to load database URI").into()),
     };
 
-    let db = EntryRepo::init(db_uri).await;
+    let db = EntryRepo::init(db_uri)
+        .await
+        .map_err(|e| anyhow!("failed to initialize database: {}", e))?;
     let db_data = Data::new(db);
 
     let config = move |cfg: &mut ServiceConfig| {
