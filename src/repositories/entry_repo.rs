@@ -67,9 +67,7 @@ impl EntryRepo {
     /// A `Result` containing a vector of `Entry` instances if successful, or an error if the retrieval fails.
     pub async fn get_entries(&self) -> Result<Vec<Entry>, anyhow::Error> {
         // Define options for the find operation to sort by timestamp in descending order.
-        let find_options = FindOptions::builder()
-            .sort(doc! { "timestamp": -1 })
-            .build();
+        let find_options = FindOptions::builder().sort(doc! { "_id": -1 }).build();
 
         // Perform the find operation on the database.
         let mut cursors = self.col.find(None, find_options).await.map_err(|e| {
